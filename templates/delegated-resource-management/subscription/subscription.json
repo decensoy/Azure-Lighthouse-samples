@@ -24,25 +24,13 @@
   "authorizations": [
    {
     "principalId": "a28959f7-c0e4-4fc9-9421-8667c9efdbfc",
-    "roleDefinitionId": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
+    "roleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c",
     "principalIdDisplayName": "GDAP - R_T3_Palvelimet"
    },
    {
     "principalId": "a01843ea-42ef-4358-b78d-3b868ddee400",
     "roleDefinitionId": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
     "principalIdDisplayName": "GDAP - R_T2_Palvelimet"
-   }
-  ],
-  "eligibleAuthorizations": [
-   {
-    "justInTimeAccessPolicy": {
-     "multiFactorAuthProvider": "Azure",
-     "maximumActivationDuration": "PT8H",
-     "managedByTenantApprovers": []
-    },
-    "principalId": "a28959f7-c0e4-4fc9-9421-8667c9efdbfc",
-    "principalIdDisplayName": "GDAP - R_T3_Palvelimet",
-    "roleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c"
    }
   ]
  },
