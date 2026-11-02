@@ -1,72 +1,88 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "mspOfferName": {
-            "type": "string",
-            "metadata": {
-                "description": "Specify a unique name for your offer"
-            }
-        },
-        "mspOfferDescription": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the Managed Service Provider offering"
-            }
-        },
-        "managedByTenantId": {
-            "type": "string",
-            "metadata": {
-                "description": "Specify the tenant id of the Managed Service Provider"
-            }
-        },
-        "authorizations": {
-            "type": "array",
-            "metadata": {
-                "description": "Specify an array of objects, containing tuples of Azure Active Directory principalId, a Azure roleDefinitionId, and an optional principalIdDisplayName. The roleDefinition specified is granted to the principalId in the provider's Active Directory and the principalIdDisplayName is visible to customers."
-            }
-        }              
+ "$schema": "https://schema.management.azure.com/schemas/2019-08-01/subscriptionDeploymentTemplate.json#",
+ "contentVersion": "1.0.0.0",
+ "parameters": {
+  "mspOfferName": {
+   "type": "string",
+   "metadata": {
+    "description": "Specify a unique name for your offer"
+   },
+   "defaultValue": "Decens Azure Management - Subscription"
+  },
+  "mspOfferDescription": {
+   "type": "string",
+   "metadata": {
+    "description": "Name of the Managed Service Provider offering"
+   },
+   "defaultValue": "Enroll an Azure Subscription to Decens Azure Management"
+  }
+ },
+ "variables": {
+  "mspRegistrationName": "[guid(parameters('mspOfferName'))]",
+  "mspAssignmentName": "[guid(parameters('mspOfferName'))]",
+  "managedByTenantId": "82301329-ac1a-4564-90b1-da30b158f220",
+  "authorizations": [
+   {
+    "principalId": "a28959f7-c0e4-4fc9-9421-8667c9efdbfc",
+    "roleDefinitionId": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
+    "principalIdDisplayName": "GDAP - R_T3_Palvelimet"
+   },
+   {
+    "principalId": "a01843ea-42ef-4358-b78d-3b868ddee400",
+    "roleDefinitionId": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
+    "principalIdDisplayName": "GDAP - R_T2_Palvelimet"
+   }
+  ],
+  "eligibleAuthorizations": [
+   {
+    "justInTimeAccessPolicy": {
+     "multiFactorAuthProvider": "Azure",
+     "maximumActivationDuration": "PT8H",
+     "managedByTenantApprovers": []
     },
-    "variables": {
-        "mspRegistrationName": "[guid(parameters('mspOfferName'))]",
-        "mspAssignmentName": "[guid(parameters('mspOfferName'))]"
-    },
-    "resources": [
-        {
-            "type": "Microsoft.ManagedServices/registrationDefinitions",
-            "apiVersion": "2019-09-01",
-            "name": "[variables('mspRegistrationName')]",
-            "properties": {
-                "registrationDefinitionName": "[parameters('mspOfferName')]",
-                "description": "[parameters('mspOfferDescription')]",
-                "managedByTenantId": "[parameters('managedByTenantId')]",
-                "authorizations": "[parameters('authorizations')]"
-            }
-        },
-        {
-            "type": "Microsoft.ManagedServices/registrationAssignments",
-            "apiVersion": "2019-09-01",
-            "name": "[variables('mspAssignmentName')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ManagedServices/registrationDefinitions/', variables('mspRegistrationName'))]"
-            ],
-            "properties": {
-                "registrationDefinitionId": "[resourceId('Microsoft.ManagedServices/registrationDefinitions/', variables('mspRegistrationName'))]"
-            }
-        }
-    ],
-    "outputs": {
-        "mspOfferName": {
-            "type": "string",
-            "value": "[concat('Managed by', ' ', parameters('mspOfferName'))]"
-        },
-        "authorizations": {
-            "type": "array",
-            "value": "[parameters('authorizations')]"
-        },
-        "eligibleAuthorizations": {
-            "type": "array",
-            "value": "[parameters('eligibleAuthorizations')]"
-        }
-    }
+    "principalId": "a28959f7-c0e4-4fc9-9421-8667c9efdbfc",
+    "principalIdDisplayName": "GDAP - R_T3_Palvelimet",
+    "roleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c"
+   }
+  ]
+ },
+ "resources": [
+  {
+   "type": "Microsoft.ManagedServices/registrationDefinitions",
+   "apiVersion": "2022-10-01",
+   "name": "[variables('mspRegistrationName')]",
+   "properties": {
+    "registrationDefinitionName": "[parameters('mspOfferName')]",
+    "description": "[parameters('mspOfferDescription')]",
+    "managedByTenantId": "[variables('managedByTenantId')]",
+    "authorizations": "[variables('authorizations')]",
+    "eligibleAuthorizations": "[variables('eligibleAuthorizations')]"
+   }
+  },
+  {
+   "type": "Microsoft.ManagedServices/registrationAssignments",
+   "apiVersion": "2022-10-01",
+   "name": "[variables('mspAssignmentName')]",
+   "dependsOn": [
+    "[resourceId('Microsoft.ManagedServices/registrationDefinitions/', variables('mspRegistrationName'))]"
+   ],
+   "properties": {
+    "registrationDefinitionId": "[resourceId('Microsoft.ManagedServices/registrationDefinitions/', variables('mspRegistrationName'))]"
+   }
+  }
+ ],
+ "outputs": {
+  "mspOfferName": {
+   "type": "string",
+   "value": "[concat('Managed by', ' ', parameters('mspOfferName'))]"
+  },
+  "authorizations": {
+   "type": "array",
+   "value": "[variables('authorizations')]"
+  },
+  "eligibleAuthorizations": {
+   "type": "array",
+   "value": "[variables('eligibleAuthorizations')]"
+  }
+ }
 }
